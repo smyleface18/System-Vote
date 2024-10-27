@@ -3,13 +3,17 @@ package com.personal_project.voting_system.dtos;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Table(name = "vote")
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Vote {
 
     @Id
@@ -37,4 +41,16 @@ public class Vote {
     @JsonManagedReference
     @Getter @Setter
     private List<Voters> voters;
+
+
+    public Vote(String tile, User user) {
+        this.tile = tile;
+        this.user = user;
+    }
+
+    public Vote(Long id, String tile, User user) {
+        this.id = id;
+        this.tile = tile;
+        this.user = user;
+    }
 }

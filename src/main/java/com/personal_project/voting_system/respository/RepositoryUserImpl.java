@@ -3,7 +3,6 @@ package com.personal_project.voting_system.respository;
 import com.personal_project.voting_system.dtos.User;
 import com.personal_project.voting_system.exceptions.ObjectNotFoundException;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

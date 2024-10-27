@@ -29,17 +29,34 @@ public class Services {
         return iRepositoryUser.findByIdUser(id);
     }
 
+
+    @Transactional
+    public void addVote( Vote vote){
+        iRepositoryVote.addVote(vote);
+    }
+
     public Vote getVote(Long id){
         return iRepositoryVote.findByIdVote(id);
     }
 
+    @Transactional
+    public void deletVote(Long idVote){
+        iRepositoryVote.deletVote(idVote);
+    }
+
+
+    @Transactional
     public void addScore(Long id) throws Exception {
         iRepositoryOption.addScore(id);
     }
 
+    @Transactional
     public void deletOption(Long id){
         iRepositoryOption.deletOption(id);
     }
+
+
+
 
     @Transactional
     public Boolean MatchIP(String ip, Long id_vote){
