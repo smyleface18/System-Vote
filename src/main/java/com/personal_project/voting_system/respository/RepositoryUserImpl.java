@@ -15,10 +15,13 @@ public class RepositoryUserImpl implements IRepositoryUser{
 
 
     @Transactional
-    public User findByIdUser(Long id) {
-        User user = entityManager.find(User.class, id);
+    public User findByNameUser(String name) {
+        String query = "SELECT u FROM User u WHERE u.name = :name";
+        User user = (User) entityManager.createQuery(query)
+                .setParameter("name",name)
+                .getSingleResult();
         if (user == null) {
-            throw new ObjectNotFoundException("No se encontró un usuario con el id: " + id);
+            throw new ObjectNotFoundException("No se encontró un usuario con el name:".concat(name));
         }
         return user;
     }

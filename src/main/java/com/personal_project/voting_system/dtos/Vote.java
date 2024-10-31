@@ -1,6 +1,7 @@
 package com.personal_project.voting_system.dtos;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class Vote {
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
-    @JsonBackReference
+    @JsonIgnoreProperties({"vote"})
     private User user;
 
     @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL, orphanRemoval = true)

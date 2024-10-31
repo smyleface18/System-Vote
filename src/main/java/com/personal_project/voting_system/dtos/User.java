@@ -1,7 +1,9 @@
 package com.personal_project.voting_system.dtos;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,18 +20,35 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @NotBlank
+    @Column(name = "name", unique = true)
     private String name;
 
     @Column(name = "email")
     private String email;
 
+    @NotBlank
+    @Size(min = 8)
     @Column(name = "password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"user}"})
     private List<Vote> vote;
 
+    @Transient
+    private boolean admin;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT true")
+    private boolean enabled = true;
+
+    @ManyToMany
+    @JoinTable(name = "users_roles",
+                joinColumns = @JoinColumn(name = "id_user"),
+                inverseJoinColumns = @JoinColumn(name = "id_roles"),
+                uniqueConstraints = {@UniqueConstraint(columnNames = {"id_roles","id_user"})}
+    )
+    private List<Role> roles;
 
 }

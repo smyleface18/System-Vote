@@ -4,6 +4,6 @@ import com.personal_project.voting_system.dtos.User;
 
 public interface IRepositoryUser {
 
-    User findByIdUser(Long id);
+    User findByNameUser(String name);
     void addUser(User user);
 }

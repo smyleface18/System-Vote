@@ -5,11 +5,14 @@ import com.personal_project.voting_system.dtos.User;
 import com.personal_project.voting_system.dtos.Vote;
 import com.personal_project.voting_system.services.Services;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+
 
 import java.util.Map;
 
@@ -17,22 +20,26 @@ import java.util.Map;
 @RequestMapping("/api")
 public class MainController {
 
+    private Services services;
+
     @Autowired
     public MainController(Services services) {
         this.services = services;
     }
-
-
-    private Services services;
 
     @GetMapping("/")
     public String getStatus(){
         return "200";
     }
 
-    @GetMapping("/user/{id}")
-    public User getUser(@PathVariable Long id){
-        return services.getUser(id);
+    @GetMapping("/user/{name}")
+    public User getUser(@PathVariable String name){
+        return services.getUser(name);
+    }
+
+    @PostMapping("/create/user")
+    public ResponseEntity<?> createUser(@Valid @RequestBody User user ){
+         return ResponseEntity.status(HttpStatus.CREATED).body(services.addUser(user));
     }
 
     @GetMapping("/vote/{id}")
@@ -55,9 +62,9 @@ public class MainController {
     }
 
     @PostMapping("/create/vote")
-    public Information addvote(@RequestBody Map<String,Object> body){
+    public Information createvote(@Valid @RequestBody Map<String,Object> body){
 
-        services.addVote(new Vote((String) body.get("title"),services.getUser(Long.valueOf((String.valueOf((int) body.get("id_user")))))));
+        services.addVote(new Vote((String) body.get("title"),services.getUser((String) body.get("nameUser"))));
 
         return new Information("add Vote","se creao la votación correctamente");
     }
