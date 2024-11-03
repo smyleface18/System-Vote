@@ -15,6 +15,6 @@ public class EmailService {
     }
 
     public void sendEmail(String email, String messageEmail){
-        mailManager.sendMail(email,messageEmail);
+        mailManager.sendMailSimple(email,"Confirmación del correo electronico",messageEmail);
     }
 }
