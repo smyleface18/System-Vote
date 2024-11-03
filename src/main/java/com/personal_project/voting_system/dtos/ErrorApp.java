@@ -16,4 +16,6 @@ public class ErrorApp {
     private String message;
     private int status;
     private Date date;
+
+
 }

@@ -1,10 +1,17 @@
 package com.personal_project.voting_system.security;
 
+import com.personal_project.voting_system.respository.IRepositoryRole;
+import com.personal_project.voting_system.respository.IRepositoryUser;
+import com.personal_project.voting_system.respository.RepositoryRoleImpl;
+import com.personal_project.voting_system.respository.RepositoryUserImpl;
 import com.personal_project.voting_system.security.filter.JwtAuthenticationFilter;
 import com.personal_project.voting_system.security.filter.JwtValidationFilter;
+import com.personal_project.voting_system.services.ServiceUser;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,16 +26,21 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SpringSecuityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final EntityManager entityManager;
 
     @Autowired
-    public SpringSecuityConfig(AuthenticationConfiguration authenticationConfiguration) {
+    public SpringSecuityConfig(AuthenticationConfiguration authenticationConfiguration, EntityManager entityManager) {
         this.authenticationConfiguration = authenticationConfiguration;
+        this.entityManager = entityManager;
     }
 
     @Bean
     AuthenticationManager authenticationManager () throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
+
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -39,9 +51,10 @@ public class SpringSecuityConfig {
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
-                        .requestMatchers("/api/create/user","/api/voted/{id_vote}/option/{id_option}").permitAll().anyRequest()
+                        .requestMatchers("/user/create","/api/voted/{id_vote}/option/{id_option}").permitAll()
+                        .anyRequest()
                         .authenticated())
-                        .addFilter(new JwtAuthenticationFilter(authenticationManager()))
+                        .addFilter(new JwtAuthenticationFilter(authenticationManager(),entityManager))
                         .addFilter(new JwtValidationFilter(authenticationManager()))
                         .csrf(config -> config.disable())
                         .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

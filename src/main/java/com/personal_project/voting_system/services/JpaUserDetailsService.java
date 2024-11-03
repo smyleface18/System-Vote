@@ -26,10 +26,10 @@ public class JpaUserDetailsService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-         User user =  repositoryUser.findByNameUser(name);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+         User user =  repositoryUser.findByNameOrEmailUser(username);
          if(user == null){
-             throw new UsernameNotFoundException(String.format("El usuario %s no existe en el sistemas",name));
+             throw new UsernameNotFoundException(String.format("El usuario %s no existe en el sistemas",username));
          }
 
 
@@ -45,4 +45,6 @@ public class JpaUserDetailsService implements UserDetailsService {
                 true,
                 authorities);
     }
+
+
 }

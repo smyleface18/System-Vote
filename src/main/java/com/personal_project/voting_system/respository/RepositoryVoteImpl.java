@@ -1,6 +1,7 @@
 package com.personal_project.voting_system.respository;
 
 
+import com.personal_project.voting_system.dtos.User;
 import com.personal_project.voting_system.dtos.Vote;
 import com.personal_project.voting_system.exceptions.ObjectNotFoundException;
 import jakarta.persistence.EntityManager;
@@ -38,5 +39,16 @@ public class RepositoryVoteImpl implements IRepositoryVote{
         else {
             entityManager.remove(vote);
         }
+    }
+
+
+
+    @Override
+    public void registerVoters(Long idUser, Long idVote) {
+        String query = "INSERT INTO users_votes (id_user, id_vote) VALUES (:idUser, :idVote)";
+        entityManager.createNativeQuery(query)
+                .setParameter("idUser", idUser)
+                .setParameter("idVote", idVote)
+                .executeUpdate();
     }
 }

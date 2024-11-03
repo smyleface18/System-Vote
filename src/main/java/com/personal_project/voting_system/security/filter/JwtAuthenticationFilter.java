@@ -2,8 +2,11 @@ package com.personal_project.voting_system.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.personal_project.voting_system.dtos.User;
+import com.personal_project.voting_system.exceptions.ObjectNotFoundException;
+import com.personal_project.voting_system.services.ServiceUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import jakarta.persistence.EntityManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,12 +29,13 @@ import static com.personal_project.voting_system.security.TokenJwtConfig.*;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-
+    private final EntityManager entityManager ;
 
 
     @Autowired
-    public JwtAuthenticationFilter( AuthenticationManager authenticationManager1) {
+    public JwtAuthenticationFilter( AuthenticationManager authenticationManager1, EntityManager entityManager) {
         this.authenticationManager = authenticationManager1;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -40,11 +44,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User user = null;
         String name = null;
         String password = null;
-
         try {
             user = new ObjectMapper().readValue(request.getInputStream(), User.class);
             name = user.getName();
             password = user.getPassword();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -58,10 +62,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authResult.getPrincipal();
         String name = user.getUsername();
-        Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
+        Long id = getUser(name).getId();
 
+        Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
         Map<String,Object> claims = new LinkedHashMap<>();
+        claims.put("code", id);
         claims.put("authorities", new ObjectMapper().writeValueAsString(roles));
+
 
         String token = Jwts.builder()
                 .subject(name)
@@ -93,4 +100,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(CONTENT_TYPE);
     }
+
+    private  User getUser(String name){
+        String query = "SELECT u FROM User u WHERE u.name = :name or u.email = :name";
+        User user = null;
+         user = (User) entityManager.createQuery(query)
+                .setParameter("name",name)
+                .getSingleResult();
+        return user;
+    }
+
 }

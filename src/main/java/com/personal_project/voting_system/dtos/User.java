@@ -51,4 +51,14 @@ public class User {
     )
     private List<Role> roles;
 
+
+    @ManyToMany(
+            mappedBy = "voters"
+    )
+   @JsonIgnoreProperties("voters")
+    private List<Vote> voted;
+
+
+    @Column(name = "img")
+    private String img;
 }

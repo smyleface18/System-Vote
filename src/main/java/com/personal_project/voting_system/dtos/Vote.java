@@ -38,10 +38,12 @@ public class Vote {
     private List<Option> options;
 
 
-    @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @ManyToMany @JoinTable( name = "users_votes",
+            joinColumns = @JoinColumn(name = "id_vote"),
+            inverseJoinColumns = @JoinColumn(name = "id_user") )
+    @JsonIgnoreProperties("voted")
     @Getter @Setter
-    private List<Voters> voters;
+    private List<User> voters;
 
 
     public Vote(String tile, User user) {
