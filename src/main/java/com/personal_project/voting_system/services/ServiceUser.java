@@ -6,6 +6,8 @@ import com.personal_project.voting_system.dtos.User;
 import com.personal_project.voting_system.exceptions.ObjectNotFoundException;
 import com.personal_project.voting_system.respository.IRepositoryRole;
 import com.personal_project.voting_system.respository.IRepositoryUser;
+import com.personal_project.voting_system.security.TokenData;
+import org.aspectj.weaver.patterns.IToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,20 +25,23 @@ public class ServiceUser {
     private final IRepositoryUser iRepositoryUser;
     private final IRepositoryRole iRepositoryRole;
     private final PasswordEncoder passwordEncoder;
-
-
+    private final TokenData tokenData;
 
     @Autowired
-    public ServiceUser(IRepositoryUser iRepositoryUser, IRepositoryRole iRepositoryRole, PasswordEncoder passwordEncoder) {
+    public ServiceUser(IRepositoryUser iRepositoryUser, IRepositoryRole iRepositoryRole, PasswordEncoder passwordEncoder, TokenData tokenData) {
         this.iRepositoryUser = iRepositoryUser;
         this.iRepositoryRole = iRepositoryRole;
         this.passwordEncoder = passwordEncoder;
+        this.tokenData = tokenData;
     }
-
 
 
     public User getUser(String name){
         return iRepositoryUser.findByNameOrEmailUser(name);
+    }
+
+    public User getUserById(Long id){
+        return iRepositoryUser.findById(id);
     }
 
     @Transactional
@@ -76,5 +81,19 @@ public class ServiceUser {
                     new ErrorApp("no se pudo encontrar el role",HttpStatus.INTERNAL_SERVER_ERROR.value(), new Date()));
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    }
+
+
+    @Transactional
+    public ResponseEntity<?> checkEmail(String token){
+       String emailUser = (String) tokenData.Readclaims(token).get("email");
+       User user = iRepositoryUser.findByNameOrEmailUser(emailUser);
+       if (user == null) {
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No existe Un usuario con ese correo");
+       }
+        user.setEnabled(true);
+       iRepositoryUser.addUser(user);
+
+       return ResponseEntity.status(HttpStatus.OK.value()).body("El usuario ha sido activado");
     }
 }

@@ -40,8 +40,8 @@ public class User {
     @Transient
     private boolean admin;
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT true")
-    private boolean enabled = true;
+    @Column(name = "enabled")
+    private boolean enabled;
 
     @ManyToMany
     @JoinTable(name = "users_roles",

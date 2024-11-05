@@ -1,9 +1,29 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.or">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
 </head>
 <body>
-    <h1 th:text="${var}"></h1>
+    <img src="../static/img/Designer.png" alt="Gráfica de Votaciones">
+    <h1 th:text="${title}"></h1>
+    <a id="post" th:href="${url}"> click me</a>
+    <style>
+        img {
+            width: 600px;
+            height: 300px;
+        }
+        #post {
+            color: white;
+            background-color: black;
+            width: 30px;
+            height: 100px;
+        }
+        h1{
+            font-size: large;
+            font-family: cursive;
+        }
+    </style>
+
+
 </body>
 </html>

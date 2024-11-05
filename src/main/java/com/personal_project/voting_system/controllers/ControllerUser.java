@@ -1,19 +1,13 @@
 package com.personal_project.voting_system.controllers;
 
-import com.personal_project.voting_system.dtos.ErrorApp;
 import com.personal_project.voting_system.dtos.User;
-import com.personal_project.voting_system.services.EmailService;
+import com.personal_project.voting_system.services.ServiceEmail;
 import com.personal_project.voting_system.services.ServiceUser;
-import com.personal_project.voting_system.services.Services;
-import jakarta.persistence.PersistenceException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.Map;
 
 @RestController
@@ -21,16 +15,17 @@ import java.util.Map;
 public class ControllerUser {
 
     private final ServiceUser serviceUser;
-    private final EmailService emailService;
+    private final ServiceEmail serviceEmail;
+
 
     @Autowired
-    public ControllerUser(ServiceUser serviceUser, EmailService emailService) {
+    public ControllerUser(ServiceUser serviceUser, ServiceEmail serviceEmail) {
         this.serviceUser = serviceUser;
-        this.emailService = emailService;
+        this.serviceEmail = serviceEmail;
     }
 
 
-    @GetMapping("/user/{name}")
+    @GetMapping("/{name}")
     public User getUser(@PathVariable String name){
         return serviceUser.getUser(name);
     }
@@ -38,15 +33,21 @@ public class ControllerUser {
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user ) throws Exception {
-        emailService.sendEmail(user.getEmail(), "ps");
+        serviceEmail.sendEmailCheck(user.getEmail());
         return serviceUser.addUser(user);
 
     }
-
-    @PostMapping("/validation/email/{token}")
-    public void validationEmail(@PathVariable String token){
-
+    @GetMapping("/validation/email/{token}")
+    public ResponseEntity<?> validationEmail(@PathVariable String token){
+        return serviceUser.checkEmail(token);
     }
+
+    @PostMapping("/recheck")
+    public void recheckEmail(@RequestBody Map<String,String> body){
+        serviceEmail.sendEmailCheck(body.get("email"));
+    }
+
+
 
 
 

@@ -9,4 +9,5 @@ public interface IRepositoryUser {
     void addUser(User user);
     Boolean checkExistingName(String name);
     Boolean checkExistingEmail(String name);
+    User findById(Long id);
 }

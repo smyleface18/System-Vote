@@ -38,6 +38,8 @@ public class RepositoryOptionImpl implements IRepositoryOption{
         }
     }
 
-
-
+    @Override
+    public void createOption(Option option) {
+        entityManager.merge(option);
+    }
 }

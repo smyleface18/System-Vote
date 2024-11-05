@@ -2,12 +2,15 @@ package com.personal_project.voting_system.dtos;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Table(name = "option")
 @Entity
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class Option {
 
         @Id
@@ -33,4 +36,9 @@ public class Option {
         @JoinColumn(name = "id_vote", nullable = false)
         @JsonBackReference
         private Vote vote;
+
+        public Option(String text, Vote vote) {
+                this.text = text;
+                this.vote = vote;
+        }
 }

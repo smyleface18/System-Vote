@@ -30,6 +30,7 @@ public class Vote {
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
     @JsonIgnoreProperties({"vote"})
+    @Getter
     private User user;
 
     @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -3,15 +3,11 @@ package com.personal_project.voting_system.controllers;
 import com.personal_project.voting_system.dtos.Information;
 import com.personal_project.voting_system.dtos.User;
 import com.personal_project.voting_system.dtos.Vote;
+import com.personal_project.voting_system.security.TokenData;
 import com.personal_project.voting_system.services.ServiceUser;
 import com.personal_project.voting_system.services.ServiceVote;
-import com.personal_project.voting_system.services.Services;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -22,12 +18,15 @@ public class ControllerVote {
 
     private final ServiceVote serviceVote;
     private final ServiceUser serviceUser;
+    private final TokenData tokenData;
 
     @Autowired
-    public ControllerVote(ServiceVote serviceVote, ServiceUser serviceUser) {
+    public ControllerVote(ServiceVote serviceVote, ServiceUser serviceUser, TokenData tokenData) {
         this.serviceVote = serviceVote;
         this.serviceUser = serviceUser;
+        this.tokenData = tokenData;
     }
+
 
     @GetMapping("/vote/{id}")
     public Vote getVote(@PathVariable Long id){
@@ -36,16 +35,25 @@ public class ControllerVote {
 
 
 
-    @DeleteMapping("/delete/vote/{id_vote}")
-    public Information deletVote(@PathVariable("id_vote") Long idVote){
-        serviceVote.deletVote(idVote);
+    @DeleteMapping("/delete/{id_vote}")
+    public Information deletVote(@PathVariable("id_vote") Long idVote,
+                                 @RequestBody Map<String,String> body){
+        Long idUser = Long.valueOf(
+                String.valueOf(
+                        tokenData.Readclaims(
+                                body.get("token")).get("code")));
+
+        serviceVote.deletVote(idVote,idUser);
         return new Information("delete Vote","se elimino la votación correctamente");
     }
 
-    @PostMapping("/create/vote")
-    public Information createvote(@Valid @RequestBody Map<String,Object> body){
-
-        serviceVote.addVote(new Vote((String) body.get("title"),serviceUser.getUser((String) body.get("nameUser"))));
+    @PostMapping("/create")
+    public Information createVote(@RequestBody Map<String,Object> vote){
+        serviceVote.addVote(new Vote ((String) vote.get("title"),
+                serviceUser.getUserById(Long.valueOf(
+                        String.valueOf(
+                                tokenData.Readclaims(
+                                        (String) vote.get("token")).get("code"))))));
 
         return new Information("add Vote","se creao la votación correctamente");
     }

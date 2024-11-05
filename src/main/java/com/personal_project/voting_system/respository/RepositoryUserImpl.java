@@ -1,17 +1,16 @@
 package com.personal_project.voting_system.respository;
 
-import com.personal_project.voting_system.dtos.ErrorApp;
+
 import com.personal_project.voting_system.dtos.User;
+import com.personal_project.voting_system.dtos.Vote;
 import com.personal_project.voting_system.exceptions.ObjectNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+
 import java.util.List;
 
 @Repository
@@ -21,7 +20,7 @@ public class RepositoryUserImpl implements IRepositoryUser{
     EntityManager entityManager;
 
 
-    @Transactional
+
     public User findByNameOrEmailUser(String username) {
         String query = "SELECT u FROM User u WHERE u.name = :username or u.email = :username";
         User user = (User) entityManager.createQuery(query)
@@ -33,6 +32,14 @@ public class RepositoryUserImpl implements IRepositoryUser{
         return user;
     }
 
+    @Override
+    public User findById(Long id) {
+        User user = entityManager.find(User.class, id);
+        if (user == null) {
+            throw new ObjectNotFoundException("No se encontró un usuario con el id: " + id);
+        }
+        return user;
+    }
 
     public void addUser(User user) {
             entityManager.merge(user);

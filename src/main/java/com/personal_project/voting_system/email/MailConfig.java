@@ -46,4 +46,7 @@ public class MailConfig {
         return new DefaultResourceLoader();
     }
 
+
+
+
 }

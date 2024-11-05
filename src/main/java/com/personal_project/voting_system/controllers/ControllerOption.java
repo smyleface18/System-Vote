@@ -1,6 +1,8 @@
 package com.personal_project.voting_system.controllers;
 
+import com.personal_project.voting_system.dtos.Option;
 import com.personal_project.voting_system.dtos.User;
+import com.personal_project.voting_system.dtos.Vote;
 import com.personal_project.voting_system.security.TokenData;
 import com.personal_project.voting_system.services.ServiceOption;
 import com.personal_project.voting_system.services.ServiceVote;
@@ -10,9 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/option")
@@ -46,5 +48,23 @@ public class ControllerOption {
             return new ResponseEntity<>("Vote recorded successfully!", HttpStatus.FORBIDDEN);
         }
 
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@RequestBody Map<String, Object> body){
+        serviceOption.AddOption(new Option(
+                (String) body.get("title"),
+                serviceVote.getVote(Long.valueOf(
+                        String.valueOf(
+                        body.get("idVote"))))));
+
+        return ResponseEntity.status(HttpStatus.CREATED.value()).body("Se ha creado correctamente la opción.");
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> delete(@RequestBody Map<String, Object> body){
+        serviceOption.deletOption(Long.valueOf(String.valueOf(body.get("id"))));
+
+        return ResponseEntity.status(HttpStatus.CREATED.value()).body("Se ha eliminado correctamente la opción.");
     }
 }
