@@ -61,7 +61,7 @@ public class ControllerOption {
         return ResponseEntity.status(HttpStatus.CREATED.value()).body("Se ha creado correctamente la opción.");
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> delete(@RequestBody Map<String, Object> body){
         serviceOption.deletOption(Long.valueOf(String.valueOf(body.get("id"))));
 

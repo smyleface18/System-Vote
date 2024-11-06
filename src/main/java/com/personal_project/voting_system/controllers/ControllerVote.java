@@ -58,4 +58,6 @@ public class ControllerVote {
         return new Information("add Vote","se creao la votación correctamente");
     }
 
+    //@GetMapping("/generate ")
+
 }

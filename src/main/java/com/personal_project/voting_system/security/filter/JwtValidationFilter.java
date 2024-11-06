@@ -20,15 +20,16 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.personal_project.voting_system.security.TokenJwtConfig.*;
 
 @Slf4j
 public class JwtValidationFilter extends BasicAuthenticationFilter {
+
+    private static final List<String> PUBLIC_ROUTES = Arrays.asList(
+            "/user/create", "/api/", "/user/validation/email/", "/user/recheck"
+    );
 
     public JwtValidationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
@@ -37,11 +38,15 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String header = request.getHeader(HEADER_AUTHORIZATION);
-        if( header == null || !header.startsWith(PREFIX_TOKEN)){
+        if(isPublicRoute(request.getServletPath())){
             chain.doFilter(request,response);
             return;
         }
 
+        if( header == null || !header.startsWith(PREFIX_TOKEN)){
+            chain.doFilter(request,response);
+            return;
+        }
         String token = header.replace(PREFIX_TOKEN,"");
         try {
             Claims claims = Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token).getPayload();
@@ -68,5 +73,9 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
             response.setContentType(CONTENT_TYPE);
         }
         chain.doFilter(request,response);
+    }
+
+    private boolean isPublicRoute(String servletPath) {
+        return PUBLIC_ROUTES.stream().anyMatch(route -> route.startsWith(servletPath));
     }
 }

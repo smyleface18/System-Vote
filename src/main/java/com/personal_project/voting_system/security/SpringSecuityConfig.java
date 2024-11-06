@@ -6,12 +6,11 @@ import com.personal_project.voting_system.respository.RepositoryRoleImpl;
 import com.personal_project.voting_system.respository.RepositoryUserImpl;
 import com.personal_project.voting_system.security.filter.JwtAuthenticationFilter;
 import com.personal_project.voting_system.security.filter.JwtValidationFilter;
-import com.personal_project.voting_system.services.ServiceUser;
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -51,7 +50,8 @@ public class SpringSecuityConfig {
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
-                        .requestMatchers("/user/create","/api/**","/api/validation/email/**","user/recheck").permitAll()
+                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+                        .requestMatchers("/user/create","/api/**","/user/validation/email/**","/user/recheck").permitAll()
                         .anyRequest()
                         .authenticated())
                         .addFilter(new JwtAuthenticationFilter(authenticationManager(),entityManager))

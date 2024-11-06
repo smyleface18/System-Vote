@@ -3,27 +3,37 @@
 <head>
     <meta charset="UTF-8">
 </head>
-<body>
+<body style=" flex-direction:column; justify-content: center; align-items: center; ">
     <img src="../static/img/Designer.png" alt="Gráfica de Votaciones">
-    <h1 th:text="${title}"></h1>
-    <a id="post" th:href="${url}"> click me</a>
-    <style>
-        img {
-            width: 600px;
-            height: 300px;
-        }
-        #post {
-            color: white;
-            background-color: black;
-            width: 30px;
-            height: 100px;
-        }
-        h1{
-            font-size: large;
-            font-family: cursive;
-        }
-    </style>
+    <h1 th:text="${title}" style="color: white; background-color: rgb(50, 49, 49); text-align:center; border-radius:5px; "></h1>
+    <p>¡Hola! me contaron que quieres registrarte en Voto Libre, ¿es cierto?</p>
+    <p>Si lo es, por favor, has click en el siguiente enlace; de lo contrario, ignora este correo.</p>
+    <div>
+        <a id="post" th:href="${url}"><b>clickeame 😉</b></a>
+    </div>
 
 
 </body>
+
+<style>
+    html{
+        color:black
+    }
+    img {
+        width: 600px;
+        height: 300px;
+    }
+    #post {
+        width: 30px;
+        height: 100px;
+    }
+    h1{
+        font-family: cursive;
+        text-align: center;
+
+    }
+    p{
+        text-align: center;
+    }
+</style>
 </html>
