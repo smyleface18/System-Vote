@@ -36,7 +36,7 @@ public class ServiceEmail {
         Map<String,Object> map = new LinkedHashMap<>();
         map.put("title","Confirma tu correo electrónico.");
 
-        map.put("url",String.format("http://127.0.0.1:%s/user/validation/email/%s",PORT_APP,tokenData.generateTokenEmail(claims)));
+        map.put("url",String.format("http://127.0.0.1:%s/api/validation/email/%s",PORT_APP,tokenData.generateTokenEmail(claims)));
         mailManager.sendMail(email,
                 "Confirmación de correo electronico","todo bien todo correcto","ValidEmail",map);
     }

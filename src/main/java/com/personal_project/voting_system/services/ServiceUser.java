@@ -7,7 +7,7 @@ import com.personal_project.voting_system.exceptions.ObjectNotFoundException;
 import com.personal_project.voting_system.respository.IRepositoryRole;
 import com.personal_project.voting_system.respository.IRepositoryUser;
 import com.personal_project.voting_system.security.TokenData;
-import org.aspectj.weaver.patterns.IToken;
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ServiceUser {
@@ -85,15 +83,34 @@ public class ServiceUser {
 
 
     @Transactional
-    public ResponseEntity<?> checkEmail(String token){
-       String emailUser = (String) tokenData.Readclaims(token).get("email");
-       User user = iRepositoryUser.findByNameOrEmailUser(emailUser);
-       if (user == null) {
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No existe Un usuario con ese correo");
-       }
-        user.setEnabled(true);
-       iRepositoryUser.addUser(user);
+    public Map<String,String > checkEmail(String token) throws JwtException, IllegalArgumentException{
+        Map<String,String > body = new LinkedHashMap<>();
+        try {
+            String emailUser = (String) tokenData.Readclaims(token).get("email");
+            User user = iRepositoryUser.findByNameOrEmailUser(emailUser);
+            if (user == null) {
+                body.put("title","Oe Oe identificate");
+                body.put("subtitle","Este correo no lo conozco.");
+                body.put("solution","Lamentamos informarle que ha recibido este correo por error. Es posible que uno de nuestros usuarios haya cometido un error al escribir su dirección de correo electrónico y, como resultado, este mensaje le ha llegado a usted inadvertidamente.\n" +
+                        "\n" +
+                        "Le pedimos disculpas por cualquier inconveniente que esto pueda haberle causado.");
+                return body;
+            }
+            user.setEnabled(true);
+            iRepositoryUser.addUser(user);
 
-       return ResponseEntity.status(HttpStatus.OK.value()).body("El usuario ha sido activado");
+
+        }
+       catch (JwtException | IllegalArgumentException ignored){
+                body.put("title", "Oh 🤔, ha ocurrido algo que no esperaba, hay un error con tu token por lo tanto." +
+                        "No puedo verficar tu cuenta por ahora 😞");
+                body.put("subtitle","Oye, pero no te preocupes; lo vamos a solucionar juntos.");
+                body.put("solution","Ingresa de nuevo a la web principal y solicita que te reenvie el email de confirmación.");
+            return body;
+       }
+        body.put("title", "Bienvenido a Voto Libre. Tu cuenta ha sido activada.");
+        body.put("subtitle","Estamos felices de tenerte como uno de nuestros usuarios.");
+        body.put("solution","Ya puedes iniciar sesión y obtener todos los privilegios de los usuarios.");
+        return body;
     }
 }

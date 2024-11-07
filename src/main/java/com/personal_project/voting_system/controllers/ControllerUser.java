@@ -37,10 +37,7 @@ public class ControllerUser {
         return serviceUser.addUser(user);
 
     }
-    @GetMapping("/validation/email/{token}")
-    public ResponseEntity<?> validationEmail(@PathVariable String token){
-        return serviceUser.checkEmail(token);
-    }
+
 
     @PostMapping("/recheck")
     public void recheckEmail(@RequestBody Map<String,String> body){

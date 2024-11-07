@@ -51,7 +51,7 @@ public class SpringSecuityConfig {
         return httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/user/create","/api/**","/user/validation/email/**","/user/recheck").permitAll()
+                        .requestMatchers("/user/create","/api/**","/api/validation/email/**","/user/recheck").permitAll()
                         .anyRequest()
                         .authenticated())
                         .addFilter(new JwtAuthenticationFilter(authenticationManager(),entityManager))
