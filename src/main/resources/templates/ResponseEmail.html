@@ -1,12 +1,44 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+     <meta charset="UTF-8">
     <title>Voto Libre Email</title>
 </head>
-<body>
-<h1 th:text="${title}" ></h1>
+<body> 
+<h1 th:text="${title}"> </h1>
 <h2 th:text="${subtitle}"></h2>
-<h5 th:text="${solution}"></h5>
+<p th:text="${solution}"></p>
 </body>
+    <style>
+        html{
+            width: 100vw;
+            height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #eaf1fb;
+        }
+        body{
+
+            display: flex;
+            flex-direction: column;
+            width: 60%;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #ffffff;
+        }
+        h1{
+            border-radius: 5px;
+            text-align: center;
+            color: rgb(245, 114, 114);
+        }
+        p{
+            text-align: center;
+            font-size: 20px;
+        }
+    </style>
 </html>

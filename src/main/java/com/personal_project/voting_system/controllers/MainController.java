@@ -26,7 +26,7 @@ public class MainController {
 
     @GetMapping("/")
     public String getStatus(){
-        return "aa";
+        return "ok";
     }
 
     @GetMapping("/validation/email/{token}")

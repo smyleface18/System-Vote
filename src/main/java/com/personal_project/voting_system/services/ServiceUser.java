@@ -108,7 +108,7 @@ public class ServiceUser {
                 body.put("solution","Ingresa de nuevo a la web principal y solicita que te reenvie el email de confirmación.");
             return body;
        }
-        body.put("title", "Bienvenido a Voto Libre. Tu cuenta ha sido activada.");
+        body.put("title", "Bienvenido a Voto Libre. Tu cuenta ha sido activada. ✅");
         body.put("subtitle","Estamos felices de tenerte como uno de nuestros usuarios.");
         body.put("solution","Ya puedes iniciar sesión y obtener todos los privilegios de los usuarios.");
         return body;
