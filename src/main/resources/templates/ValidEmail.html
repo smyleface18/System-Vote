@@ -8,12 +8,15 @@ style="">
                 justify-content: center;
                 align-items: center;
                 background-color:#eaf1fb;
-                padding-left:100px;
-                padding-right:100px;
-                padding-top: 50px;
-                padding-bottom: 50px;">
+                padding-left:0.5rem;
+                padding-right:0.5rem;
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+                overflow-x:hidden ;">
 
-    <div style="background-color: #ffffff;
+    <div style="color-scheme: light;
+                background-color: Canvas;
+                color: CanvasText;
                 flex-direction:column;
                 justify-content: center;
                 align-items: center;
@@ -21,20 +24,30 @@ style="">
                 padding-right:20px;
                 padding-top: 10px;
                 padding-bottom: 10px;">
-        <img src="../static/img/Designer.png" alt="Gráfica de Votaciones">
-        <h1 th:text="${title}" style="color: black; text-align:center; border-radius:5px;
-                                       font-size: 35px;"></h1>
-        <p style="text-align:center; color: black; font-size: 20px;">¡Hola! me contaron que quieres registrarte en Voto Libre, ¿es cierto?</p>
-        <p style="text-align:center; color: black; font-size: 20px;">Si lo es, por favor, has click en el siguiente enlace; de lo contrario, ignora este correo.</p>
-        <div>
+        <img th:src="@{img/Designer.png}"/>
+        <h1 th:text="${title}" style=" text-align:center; border-radius:5px;
+                                       font-size: 1.5rem;"></h1>
+        <p style="text-align:center; font-size: 1rem;">
+            ¡Hola! Gracias por tu interés en registrarte en Voto Libre. Estamos encantados de que desees unirte a nuestra comunidad y participar activamente en nuestro sistema de votación.
+            Para completar tu registro, por favor, haz clic en el siguiente enlace:</p>
+        <div style="
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                  ">
             <a id="post" th:href="${url}" style="
-            background-color: #1a80e6;
+            background-color: #01ca9a;
              padding: 5px;
              border-radius: 5px;
              color:aliceblue;
              text-decoration: none;
-             font-size: 20px;"><b>Clickeame 😉</b></a>
+             font-size: 1rem;"><b>Activar mi cuenta ✅</b></a>
         </div>
+
+        <p style="text-align:center; font-size:  1rem;">Si no solicitaste un registro en Voto Libre o si crees que este correo te llegó por error, simplemente ignóralo.</p>
+
     </div>
 
 </body>

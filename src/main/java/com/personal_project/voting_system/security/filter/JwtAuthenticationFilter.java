@@ -83,7 +83,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Map<String, String> body = new LinkedHashMap<>();
         body.put("user", user.getUsername());
         body.put("token",token);
-        body.put("message", String.format("Hola %s has iniciado sesion con exito!",name));
+        body.put("message", String.format("Hello %s You have successfully logged in!",name));
+        body.put("icon","success");
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setContentType(CONTENT_TYPE);
@@ -93,8 +94,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         Map<String, String> body = new LinkedHashMap<>();
-        body.put("message","Error en la autenticacion, nombre de usuario o contraseña incorrecta!");
+        body.put("message","Authentication error, incorrect username or password!");
         body.put("error", failed.getMessage());
+        body.put("icon","error");
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setStatus(HttpStatus.FORBIDDEN.value());

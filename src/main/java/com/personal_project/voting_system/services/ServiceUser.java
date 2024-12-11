@@ -1,9 +1,11 @@
 package com.personal_project.voting_system.services;
 
-import com.personal_project.voting_system.dtos.ErrorApp;
+import com.personal_project.voting_system.dtos.Information;
+import com.personal_project.voting_system.dtos.ResponseApp;
 import com.personal_project.voting_system.dtos.Role;
 import com.personal_project.voting_system.dtos.User;
 import com.personal_project.voting_system.exceptions.ObjectNotFoundException;
+import com.personal_project.voting_system.exceptions.OccupiedAttributes;
 import com.personal_project.voting_system.respository.IRepositoryRole;
 import com.personal_project.voting_system.respository.IRepositoryUser;
 import com.personal_project.voting_system.security.TokenData;
@@ -62,13 +64,13 @@ public class ServiceUser {
             user.setRoles(roles);
             if(iRepositoryUser.checkExistingName(user.getName()) ){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                        .body(new ErrorApp("Ese nombre de usuario ya esta registrado por favor ingrese otro nombre",
-                                HttpStatus.INTERNAL_SERVER_ERROR.value(), new Date()));
+                        .body(new OccupiedAttributes("error when trying to register",
+                        "This email is already named please enter another name, you can add numbers to it "));
             }
             if (iRepositoryUser.checkExistingEmail(user.getEmail())) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                        .body(new ErrorApp("Ese correo ya esta registrado por favor ingrese otro correo",
-                                HttpStatus.INTERNAL_SERVER_ERROR.value(), new Date()));
+                        .body(new OccupiedAttributes("error when trying to register",
+                                "This email is already email please enter another email, enter another email "));
             }
 
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -76,9 +78,9 @@ public class ServiceUser {
         }
         catch(ObjectNotFoundException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new ErrorApp("no se pudo encontrar el role",HttpStatus.INTERNAL_SERVER_ERROR.value(), new Date()));
+                    new ResponseApp("no se pudo encontrar el role",HttpStatus.INTERNAL_SERVER_ERROR.value(), new Date()));
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Information("Successful registration! verify your email address","If you don't find the email in your inbox, be sure to check your spam or junk mail folder. If you are still having problems, please do not hesitate to contact us.","success"));
     }
 
 

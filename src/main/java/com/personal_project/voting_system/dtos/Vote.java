@@ -25,7 +25,20 @@ public class Vote {
 
     @Column(name = "title")
     @Getter @Setter
-    private String tile;
+    private String title;
+
+    @Column(name = "regex")
+    @Getter @Setter
+    private String regex;
+
+    @Column(name = "date_init")
+    @Getter @Setter
+    private String dateInit;
+
+    @Column(name = "date_end")
+    @Getter @Setter
+    private String dateEnd;
+
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
@@ -47,14 +60,22 @@ public class Vote {
     private List<User> voters;
 
 
-    public Vote(String tile, User user) {
-        this.tile = tile;
+    public Vote(String title, User user) {
+        this.title = title;
         this.user = user;
     }
 
     public Vote(Long id, String tile, User user) {
         this.id = id;
-        this.tile = tile;
+        this.title = tile;
         this.user = user;
+    }
+
+    public Vote(String title, User user, String regex, String dateInit, String dateEnd) {
+        this.title = title;
+        this.user = user;
+        this.regex = regex;
+        this.dateInit = dateInit;
+        this.dateEnd = dateEnd;
     }
 }

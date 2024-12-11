@@ -1,9 +1,13 @@
 package com.personal_project.voting_system.controllers;
 
 import com.personal_project.voting_system.dtos.User;
+import com.personal_project.voting_system.security.TokenData;
 import com.personal_project.voting_system.services.ServiceEmail;
 import com.personal_project.voting_system.services.ServiceUser;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,22 +16,25 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
+//@CrossOrigin(origins = "http://localhost:5173")
 public class ControllerUser {
 
+    private static final Logger log = LoggerFactory.getLogger(ControllerUser.class);
     private final ServiceUser serviceUser;
     private final ServiceEmail serviceEmail;
-
+    private final TokenData tokenData;
 
     @Autowired
-    public ControllerUser(ServiceUser serviceUser, ServiceEmail serviceEmail) {
-        this.serviceUser = serviceUser;
+    public ControllerUser(ServiceEmail serviceEmail, ServiceUser serviceUser, TokenData tokenData) {
         this.serviceEmail = serviceEmail;
+        this.serviceUser = serviceUser;
+        this.tokenData = tokenData;
     }
 
-
-    @GetMapping("/{name}")
-    public User getUser(@PathVariable String name){
-        return serviceUser.getUser(name);
+    @GetMapping("/{token}")
+    public User getUser(@PathVariable String token){
+        Long id = Long.valueOf(String.valueOf(tokenData.Readclaims(token).get("code")));
+        return serviceUser.getUserById(id);
     }
 
 
@@ -46,7 +53,13 @@ public class ControllerUser {
 
 
 
-
+    @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
+    public void handleOptions(HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setStatus(HttpServletResponse.SC_OK); }
 
 
 }

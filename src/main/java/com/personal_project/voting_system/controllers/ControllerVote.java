@@ -6,31 +6,38 @@ import com.personal_project.voting_system.dtos.Vote;
 import com.personal_project.voting_system.security.TokenData;
 import com.personal_project.voting_system.services.ServiceUser;
 import com.personal_project.voting_system.services.ServiceVote;
+import com.personal_project.voting_system.services.VerificationViewVote;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/vote")
+
 public class ControllerVote {
 
     private final ServiceVote serviceVote;
     private final ServiceUser serviceUser;
     private final TokenData tokenData;
+    private final VerificationViewVote verificationViewVote;
 
     @Autowired
-    public ControllerVote(ServiceVote serviceVote, ServiceUser serviceUser, TokenData tokenData) {
+    public ControllerVote(ServiceVote serviceVote, ServiceUser serviceUser, TokenData tokenData, VerificationViewVote verificationViewVote) {
         this.serviceVote = serviceVote;
         this.serviceUser = serviceUser;
         this.tokenData = tokenData;
+        this.verificationViewVote = verificationViewVote;
     }
 
-
-    @GetMapping("/vote/{id}")
-    public Vote getVote(@PathVariable Long id){
-        return serviceVote.getVote(id);
+    @GetMapping("/{idUser}/{token}")
+    public Vote getVote(@PathVariable String token,@PathVariable Long idUser){
+        return verificationViewVote.verificationViewVote(token,idUser);
     }
 
 
@@ -55,9 +62,16 @@ public class ControllerVote {
                                 tokenData.Readclaims(
                                         (String) vote.get("token")).get("code"))))));
 
-        return new Information("add Vote","se creao la votación correctamente");
+        return new Information("add Vote","the vote was created correctly");
     }
 
-    //@GetMapping("/generate ")
+    @GetMapping("/generate/token/access")
+    public String  generateUrl(@RequestBody Map<String,Object> body){
+        return tokenData.generateTokenVote(body);
+    }
 
+    @GetMapping("/verify/{token}")
+    public Map<String, Object> ve(@PathVariable String token){
+        return tokenData.verifyDate(token);
+    }
 }

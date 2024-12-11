@@ -11,7 +11,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Information {
 
-    private String name;
-    private String msg;
+    private String title;
+    private String message;
+    private String icon;
 
+    public Information(String title, String message) {
+        this.title = title;
+        this.message = message;
+    }
 }
