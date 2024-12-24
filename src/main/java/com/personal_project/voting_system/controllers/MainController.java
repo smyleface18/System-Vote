@@ -1,6 +1,8 @@
 package com.personal_project.voting_system.controllers;
 
 
+import com.personal_project.voting_system.dtos.User;
+import com.personal_project.voting_system.security.TokenData;
 import com.personal_project.voting_system.services.ServiceEmail;
 import com.personal_project.voting_system.services.ServiceUser;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,16 +15,18 @@ import java.util.Map;
 
 
 @Controller
-//@RequestMapping("/api")
+@RequestMapping("/api")
 public class MainController {
 
     private final ServiceUser serviceUser;
     private final ServiceEmail serviceEmail;
+    private final TokenData tokenData;
 
     @Autowired
-    public MainController(ServiceUser serviceUser, ServiceEmail serviceEmail) {
-        this.serviceUser = serviceUser;
+    public MainController(ServiceEmail serviceEmail, ServiceUser serviceUser, TokenData tokenData) {
         this.serviceEmail = serviceEmail;
+        this.serviceUser = serviceUser;
+        this.tokenData = tokenData;
     }
 
     @GetMapping("/")
@@ -43,6 +47,16 @@ public class MainController {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    @GetMapping("/change/{token}")
+    public String changeData(@PathVariable String token){
+        Map<String,Object> map = tokenData.Readclaims(token);
+        User user = serviceUser.getUser((String) map.get("name"));
+        user.setEmail((String) map.get("email"));
+        serviceUser.addUser(user);
+
+        return "ResponseEmail";
     }
 
 }

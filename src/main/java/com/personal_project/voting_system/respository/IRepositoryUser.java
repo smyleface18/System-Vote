@@ -1,7 +1,7 @@
 package com.personal_project.voting_system.respository;
 
 import com.personal_project.voting_system.dtos.User;
-import org.springframework.http.ResponseEntity;
+
 
 public interface IRepositoryUser {
 
@@ -10,4 +10,5 @@ public interface IRepositoryUser {
     Boolean checkExistingName(String name);
     Boolean checkExistingEmail(String name);
     User findById(Long id);
+    void updata(User user);
 }

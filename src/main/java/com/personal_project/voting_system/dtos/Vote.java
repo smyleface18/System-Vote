@@ -42,7 +42,7 @@ public class Vote {
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
-    @JsonIgnoreProperties({"vote"})
+    @JsonIgnoreProperties({"vote","voted"})
     @Getter
     private User user;
 
@@ -55,9 +55,8 @@ public class Vote {
     @ManyToMany @JoinTable( name = "users_votes",
             joinColumns = @JoinColumn(name = "id_vote"),
             inverseJoinColumns = @JoinColumn(name = "id_user") )
-    @JsonIgnoreProperties("voted")
     @Getter @Setter
-    private List<User> voters;
+    private List<UserSimple> voters;
 
 
     public Vote(String title, User user) {

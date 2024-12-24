@@ -63,7 +63,7 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         }
-        catch (JwtException e){
+        catch(JwtException e){
             Map<String,String> body = new LinkedHashMap<>();
             body.put("error",e.getMessage());
             body.put("message","El token JWT es invalido!");

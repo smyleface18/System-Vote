@@ -56,11 +56,7 @@ public class ControllerVote {
 
     @PostMapping("/create")
     public Information createVote(@RequestBody Map<String,Object> vote){
-        serviceVote.addVote(new Vote ((String) vote.get("title"),
-                serviceUser.getUserById(Long.valueOf(
-                        String.valueOf(
-                                tokenData.Readclaims(
-                                        (String) vote.get("token")).get("code"))))));
+
 
         return new Information("add Vote","the vote was created correctly");
     }

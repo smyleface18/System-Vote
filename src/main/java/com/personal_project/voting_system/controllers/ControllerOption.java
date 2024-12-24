@@ -2,6 +2,7 @@ package com.personal_project.voting_system.controllers;
 
 import com.personal_project.voting_system.dtos.Option;
 import com.personal_project.voting_system.dtos.User;
+import com.personal_project.voting_system.dtos.UserSimple;
 import com.personal_project.voting_system.dtos.Vote;
 import com.personal_project.voting_system.security.TokenData;
 import com.personal_project.voting_system.services.ServiceOption;
@@ -36,7 +37,7 @@ public class ControllerOption {
     public ResponseEntity<?> voted(@PathVariable("id_option") Long id_option, @PathVariable("id_vote") Long id_vote
             , @PathVariable String token){
             Long id = Long.valueOf(String.valueOf(tokenData.Readclaims(token).get("code")));
-           List<User> users =  serviceVote.getVote(id_vote).getVoters().stream()
+           List<UserSimple> users =  serviceVote.getVote(id_vote).getVoters().stream()
                     .filter( user -> user.getId().equals(id))
                     .toList();
         if(!users.isEmpty()){

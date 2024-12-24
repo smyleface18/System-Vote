@@ -25,8 +25,10 @@ public class ServiceEmail {
         this.tokenData = tokenData;
     }
 
-    public void sendEmail(String email, String messageEmail){
-        mailManager.sendMailSimple(email,"Confirmación del correo electronico",messageEmail);
+    public void sendEmail(String email, String subject,
+                          String template,String url){
+        url = "http://127.0.0.1:"+PORT_APP+url;
+        mailManager.sendMail(email,subject,template,url);
     }
 
     public void sendEmailCheck(String email){
@@ -34,10 +36,21 @@ public class ServiceEmail {
         claims.put("email",email);
 
         Map<String,Object> map = new LinkedHashMap<>();
-        map.put("title","Confirma tu correo electrónico.");
+        map.put("title","Confirm your email address.");
 
         map.put("url",String.format("http://127.0.0.1:%s/api/validation/email/%s",PORT_APP,tokenData.generateTokenEmail(claims)));
         mailManager.sendMail(email,
-                "Confirmación de correo electronico","todo bien todo correcto","ValidEmail",map);
+                "E-mail confirmation","all good all right","ValidEmail",map);
     }
+
+    public void sendEmailCheck(String email,String token, String title){
+
+        Map<String,Object> map = new LinkedHashMap<>();
+        map.put("title",title);
+        map.put("url",String.format("http://127.0.0.1:%s/api/validation/email/%s",PORT_APP,token));
+        mailManager.sendMail(email,
+                "E-mail confirmation","all good all right","ValidEmail",map);
+    }
+
+
 }

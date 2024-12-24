@@ -29,7 +29,6 @@ public class TokenData {
     }
 
     public String generateTokenVote(Map <String,Object> body){
-        log.info(new Date(System.currentTimeMillis()+Integer.parseInt(String.valueOf(body.get("dateInitial")))));
         return Jwts.builder().subject("vote")
                 .claim("idVote",body.get("idVote"))
                 .claim("dateInitial",new Date(System.currentTimeMillis()+Integer.parseInt(String.valueOf(body.get("dateInitial")))))

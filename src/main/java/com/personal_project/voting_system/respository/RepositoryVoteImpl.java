@@ -25,6 +25,8 @@ public class RepositoryVoteImpl implements IRepositoryVote{
         return vote;
     }
 
+
+
     @Override
     public void addVote(Vote vote){
         entityManager.merge(vote);

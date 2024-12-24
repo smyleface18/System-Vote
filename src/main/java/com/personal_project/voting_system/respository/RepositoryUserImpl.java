@@ -45,6 +45,11 @@ public class RepositoryUserImpl implements IRepositoryUser{
             entityManager.merge(user);
     }
 
+    public void updata(User user) {
+        entityManager.merge(user);
+    }
+
+
     @Override
     public Boolean checkExistingName(String name) {
         boolean value = false;

@@ -49,6 +49,7 @@ public class User {
                 inverseJoinColumns = @JoinColumn(name = "id_roles"),
                 uniqueConstraints = {@UniqueConstraint(columnNames = {"id_roles","id_user"})}
     )
+    @JsonIgnoreProperties
     private List<Role> roles;
 
 
