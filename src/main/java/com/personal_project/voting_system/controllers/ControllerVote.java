@@ -7,6 +7,7 @@ import com.personal_project.voting_system.security.TokenData;
 import com.personal_project.voting_system.services.ServiceUser;
 import com.personal_project.voting_system.services.ServiceVote;
 import com.personal_project.voting_system.services.VerificationViewVote;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +57,7 @@ public class ControllerVote {
 
     @PostMapping("/create")
     public Information createVote(@RequestBody Map<String,Object> vote){
-
-
+        serviceVote.CreateVoting(vote);
         return new Information("add Vote","the vote was created correctly");
     }
 
@@ -70,4 +70,7 @@ public class ControllerVote {
     public Map<String, Object> ve(@PathVariable String token){
         return tokenData.verifyDate(token);
     }
+
+
+
 }

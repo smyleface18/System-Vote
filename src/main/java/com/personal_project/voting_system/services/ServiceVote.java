@@ -6,17 +6,18 @@ import com.personal_project.voting_system.dtos.Vote;
 import com.personal_project.voting_system.respository.IRepositoryOption;
 import com.personal_project.voting_system.respository.IRepositoryUser;
 import com.personal_project.voting_system.respository.IRepositoryVote;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ServiceVote {
 
+    private static final Logger log = LoggerFactory.getLogger(ServiceVote.class);
     private final IRepositoryVote  iRepositoryVote;
     private final IRepositoryUser iRepositoryUser;
     private final IRepositoryOption iRepositoryOption;
@@ -51,17 +52,35 @@ public class ServiceVote {
     }
 
     @Transactional
-    public void CreateVoting(Map<String,Object> vote){
-        User creatorUser = iRepositoryUser.findById(Long.valueOf(String.valueOf(vote.get("idUser"))));
-        iRepositoryVote.addVote(new Vote ((String) vote.get("title"),
+    public void CreateVoting(Map<String,Object> map){
+        User creatorUser = iRepositoryUser.findById(Long.valueOf(String.valueOf(map.get("idUser"))));
+        iRepositoryVote.addVote(new Vote ((String) map.get("title"),
                         creatorUser));
 
         Optional<Vote> voteOptional = creatorUser.getVote().stream()
-                                    .filter(vo -> vo.getTitle().equals(vote.get("title"))).findFirst();
+                                    .filter(vo -> vo.getTitle().equals(map.get("title"))).findFirst();
 
         if(voteOptional.isPresent()){
             Vote newVote = voteOptional.get();
-            iRepositoryOption.createOption();
+            String dateInit = String.valueOf(map.get("dateInit"));
+            String dateEnd = String.valueOf(map.get("dateEnd"));
+            String regex = String.valueOf(map.get("regex"));
+            if (dateInit != null && !dateInit.equals("0") && dateEnd != null && !dateEnd.equals("0")) {
+                newVote.setDateInit(dateInit);
+                newVote.setDateEnd(dateEnd);
+            }
+            if (regex != null && !regex.equals("")){
+                newVote.setRegex(regex);
+            }
+
+            Object objectOptions = map.get("options");
+            if(objectOptions instanceof List){
+                List<String> optionsList = (List<String>) objectOptions;
+                ArrayList<String> arrayList = new ArrayList<>((List<String>) optionsList);
+                arrayList.forEach(option ->  iRepositoryOption.createOption(new Option(option, newVote)));
+                log.info("creo que bien jajaj :D ssssssssss");
+            }
+
         }
 
     }

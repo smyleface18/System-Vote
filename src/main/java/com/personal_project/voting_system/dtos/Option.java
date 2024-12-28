@@ -25,7 +25,7 @@ public class Option {
 
         @Column(name = "url")
         @Getter @Setter
-        private String url;
+        private String img;
 
         @Column(name = "votes")
         @Getter @Setter

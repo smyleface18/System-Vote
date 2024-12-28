@@ -37,7 +37,6 @@ public class ControllerUser {
         return serviceUser.getUserById(id);
     }
 
-
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user ) throws Exception {
         serviceEmail.sendEmailCheck(user.getEmail());
@@ -58,13 +57,6 @@ public class ControllerUser {
 
 
 
-    @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
-    public void handleOptions(HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS,PATCH");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setStatus(HttpServletResponse.SC_OK); }
 
 
 }
