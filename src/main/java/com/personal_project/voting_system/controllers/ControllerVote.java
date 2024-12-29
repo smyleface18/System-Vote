@@ -17,6 +17,7 @@ import javax.xml.crypto.Data;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/vote")
@@ -36,10 +37,16 @@ public class ControllerVote {
         this.verificationViewVote = verificationViewVote;
     }
 
-    @GetMapping("/{idUser}/{token}")
-    public Vote getVote(@PathVariable String token,@PathVariable Long idUser){
-        return verificationViewVote.verificationViewVote(token,idUser);
+    @GetMapping("/{idUser}/{token}/{currentDate}")
+    public Optional<Vote> getVote(@PathVariable String token, @PathVariable Long idUser, @PathVariable Long currentDate) {
+        Optional<Vote> vote = verificationViewVote.verificationViewVote(token, idUser, currentDate);
+        if (vote != null) {
+            return vote;
+        } else {
+            return Optional.of(new Vote("the security code has been changed and is no longer valid or the voting is no longer active."));
+        }
     }
+
 
 
 
@@ -61,7 +68,7 @@ public class ControllerVote {
         return new Information("add Vote","the vote was created correctly");
     }
 
-    @GetMapping("/generate/token/access")
+    @PostMapping("/generate/token/access")
     public String  generateUrl(@RequestBody Map<String,Object> body){
         return tokenData.generateTokenVote(body);
     }

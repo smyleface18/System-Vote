@@ -46,7 +46,7 @@ public class ControllerOption {
         else {
             serviceVote.registerVoters(id,id_vote);
             serviceOption.addScore(id_option);
-            return new ResponseEntity<>("Vote recorded successfully!", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Vote recorded successfully!", HttpStatus.OK);
         }
 
     }

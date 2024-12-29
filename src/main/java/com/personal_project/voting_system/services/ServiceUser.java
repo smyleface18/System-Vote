@@ -87,7 +87,6 @@ public class ServiceUser {
     @Transactional
     public ResponseEntity<?> updataUser(UpdataUser updataUser) throws ObjectNotFoundException {
         User old = iRepositoryUser.findById(updataUser.getId());
-        log.info("******* updata 1 *****");
         if (passwordEncoder.matches(updataUser.getPassword(), old.getPassword())){
             if (!(old.getName().equals(updataUser.getName()))){
                 old.setName(updataUser.getName());
@@ -97,7 +96,6 @@ public class ServiceUser {
             }
             if(old.getEmail().equals(updataUser.getEmail())){
                 iRepositoryUser.updata(old);
-                log.info("******* updata information *****");
             }
             else{
 
@@ -106,7 +104,6 @@ public class ServiceUser {
                 map.put("email", old.getEmail());
                 String token =  tokenData.generateTokenEmail(map);
                 String url = String.format("/api/change/%s",token);
-                log.info(updataUser.getEmail()+"////////////////////////////////////");
                 serviceEmail.sendEmail(updataUser.getEmail(),"Data change confirmation email ","ChangeDataEmail",url);
             }
         }

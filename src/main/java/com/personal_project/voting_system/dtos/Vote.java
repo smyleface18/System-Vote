@@ -64,6 +64,10 @@ public class Vote {
         this.user = user;
     }
 
+    public Vote(String title) {
+        this.title = title;
+    }
+
     public Vote(Long id, String tile, User user) {
         this.id = id;
         this.title = tile;

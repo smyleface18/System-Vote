@@ -31,10 +31,7 @@ public class TokenData {
     public String generateTokenVote(Map <String,Object> body){
         return Jwts.builder().subject("vote")
                 .claim("idVote",body.get("idVote"))
-                .claim("dateInitial",new Date(System.currentTimeMillis()+Integer.parseInt(String.valueOf(body.get("dateInitial")))))
-                .claim("dateEnd",new Date(System.currentTimeMillis()+Integer.parseInt(String.valueOf(body.get("dateEnd")))))
-                .expiration(new Date(System.currentTimeMillis()+Integer.parseInt(String.valueOf(body.get("dateEnd"))))) //por alguna razon le reduce por 1000 a los milisegundos por eso decidi guardar las fechas en los claims
-                .issuedAt(new Date(System.currentTimeMillis()+Integer.parseInt(String.valueOf(body.get("dateInitial")))))
+                .issuedAt(new Date())
                 .signWith(SECRET_KEY)
                 .compact();
     }
