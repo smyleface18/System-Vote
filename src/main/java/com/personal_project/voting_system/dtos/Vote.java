@@ -46,6 +46,11 @@ public class Vote {
     @Getter
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "id_user", nullable = false,insertable=false, updatable=false)
+    @Getter
+    private UserSimple UserSimple;
+
     @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     @Getter @Setter

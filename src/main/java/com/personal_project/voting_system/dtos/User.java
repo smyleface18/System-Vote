@@ -34,7 +34,7 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties({"user","voters"})
+    @JsonIgnoreProperties({"user"})
     private List<Vote> vote;
 
     @Transient
