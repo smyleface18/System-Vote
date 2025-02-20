@@ -40,5 +40,6 @@ public class Option {
         public Option(String text, Vote vote) {
                 this.text = text;
                 this.vote = vote;
+                this.votes = 0;
         }
 }
